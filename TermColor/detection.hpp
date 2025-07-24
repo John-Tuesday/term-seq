@@ -1,0 +1,107 @@
+#pragma once
+
+#ifndef TERMCOLOR_DETECTION_HPP
+#define TERMCOLOR_DETECTION_HPP
+
+#include <iostream>
+
+#ifndef TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#if defined(__linux__) || defined(__DARWIN__)
+#define TERMCOLOR_ENABLE_POSIX_TERM_DETECTION 1
+#else
+#define TERMCOLOR_ENABLE_POSIX_TERM_DETECTION 0
+#endif
+#endif
+
+#if defined(TERMCOLOR_ENABLE_POSIX_TERM_DETECTION) &&                          \
+    TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#include "private/detection_posix.hpp"
+#endif
+
+namespace sgr {
+
+bool isStdoutBuffer(const std::streambuf *);
+bool isStdoutBuffer(const std::wstreambuf *);
+
+bool isStderrBuffer(const std::streambuf *);
+bool isStderrBuffer(const std::wstreambuf *);
+
+/**
+ * Returns a pointer to the underlying stream buffer or wrapped stream buffer.
+ */
+template <typename Stream>
+  requires std::derived_from<
+      std::remove_cvref_t<Stream>,
+      std::basic_ostream<typename std::remove_cvref_t<Stream>::char_type>>
+auto bufferOf(Stream &&stream) -> decltype(auto);
+
+bool isTerminalOutputBuffer(const std::streambuf *);
+bool isTerminalOutputBuffer(const std::wstreambuf *);
+
+template <typename T>
+  requires std::derived_from<
+      std::remove_cvref_t<T>,
+      std::basic_ostream<typename std::remove_cvref_t<T>::char_type>>
+bool isTerminalOutputStream(T &&stream);
+
+} // namespace sgr
+
+bool sgr::isStdoutBuffer(const std::streambuf *buf) {
+  return buf == std::cout.rdbuf();
+}
+bool sgr::isStdoutBuffer(const std::wstreambuf *buf) {
+  return buf == std::wcout.rdbuf();
+}
+
+bool sgr::isStderrBuffer(const std::streambuf *buf) {
+  return buf == std::cerr.rdbuf() || buf == std::clog.rdbuf();
+}
+bool sgr::isStderrBuffer(const std::wstreambuf *buf) {
+  return buf == std::wcerr.rdbuf() || buf == std::wclog.rdbuf();
+}
+
+bool sgr::isTerminalOutputBuffer(const std::streambuf *buf) {
+#if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+  return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
+         (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());
+#else
+  return isStdoutBuffer(buf) || isStderrBuffer(buf);
+#endif
+}
+
+bool sgr::isTerminalOutputBuffer(const std::wstreambuf *buf) {
+#if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+  return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
+         (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());
+#else
+  return isStdoutBuffer(buf) || isStderrBuffer(buf);
+#endif
+}
+
+template <typename Stream>
+  requires std::derived_from<
+      std::remove_cvref_t<Stream>,
+      std::basic_ostream<typename std::remove_cvref_t<Stream>::char_type>>
+auto sgr::bufferOf(Stream &&stream) -> decltype(auto) {
+  using R = std::remove_cvref_t<Stream>;
+  if constexpr (requires {
+                  requires std::derived_from<
+                      R, std::basic_osyncstream<typename R::char_type,
+                                                typename R::traits_type,
+                                                typename R::allocator_type>>;
+                }) {
+    return std::forward<Stream>(stream).get_wrapped();
+  } else {
+    return std::forward<Stream>(stream).rdbuf();
+  }
+}
+
+template <typename T>
+  requires std::derived_from<
+      std::remove_cvref_t<T>,
+      std::basic_ostream<typename std::remove_cvref_t<T>::char_type>>
+bool sgr::isTerminalOutputStream(T &&stream) {
+  return isTerminalOutputBuffer(sgr::bufferOf(std::forward<T>(stream)));
+}
+
+#endif

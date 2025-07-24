@@ -1,0 +1,10 @@
+# Cmake
+/build/
+CMakeFiles/
+CMakeUserPresets.json
+
+# LSP
+.clangd
+.cache
+compile_commands.json
+.qmlls.ini

@@ -4,67 +4,6 @@ project(term_color
 )
 include(CTest)
 
-add_library(term_color_sgr INTERFACE)
-add_library("TermColor::TermColor" ALIAS term_color_sgr)
-target_sources(term_color_sgr
-    PUBLIC FILE_SET HEADERS
-    FILES
-        TermColor/Sgr.hpp
-        TermColor/SgrColor.hpp
-        TermColor/constants.hpp
-        TermColor/detection.hpp
-        TermColor/private/detection_posix.hpp
-    PUBLIC FILE_SET amalag_header TYPE HEADERS
-    BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/generated"
-    FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor"
-)
-target_compile_features(term_color_sgr
-    INTERFACE
-        cxx_std_23
-)
-set_target_properties(term_color_sgr PROPERTIES
-        TRANSITIVE_COMPILE_PROPERTIES "TermColor_enable_posix_term_detection"
-        TRANSITIVE_LINK_PROPERTIES "TermColor_enable_posix_term_detection"
-)
-
-block(SCOPE_FOR VARIABLES)
-    set(posix_term_detect
-        "$<TARGET_PROPERTY:TermColor_enable_posix_term_detection>"
-    )
-    set(prop_unset
-        "$<STREQUAL:,${posix_term_detect}>"
-    )
-    set(posix_term_detect
-        "$<GENEX_EVAL:${posix_term_detect}>"
-    )
-    set(posix_term_detect
-        "$<BOOL:${posix_term_detect}>"
-    )
-    target_compile_definitions(term_color_sgr
-        INTERFACE
-            "$<$<NOT:${prop_unset}>:TERMCOLOR_ENABLE_POSIX_TERM_DETECTION=${posix_term_detect}>"
-    )
-endblock()
-
-file(GENERATE OUTPUT generated/TermColor
-    CONTENT [==[
-#pragma once
-
-#ifndef TERMCOLOR_TERMCOLOR_HPP
-#define TERMCOLOR_TERMCOLOR_HPP
-
-
-$<JOIN:$<LIST:FILTER,$<LIST:TRANSFORM,$<PATH:RELATIVE_PATH,$<PATH:CMAKE_PATH,NORMALIZE,$<TARGET_PROPERTY:HEADER_SET>>,$<PATH:CMAKE_PATH,NORMALIZE,$<TARGET_PROPERTY:HEADER_DIRS>>>,REPLACE,(^.+$),#include <\1$<ANGLE-R>\n>,EXCLUDE,private/.*>,>
-
-#endif
-]==]
-    TARGET term_color_sgr
-)
-set_source_files_properties(generated/TermColor PROPERTIES
-    GENERATED ON
-)
-add_custom_target(term_color_gen_amalgation DEPENDS generated/TermColor)
-add_dependencies(term_color_sgr term_color_gen_amalgation)
+add_subdirectory(src)
 
 add_subdirectory(tests)

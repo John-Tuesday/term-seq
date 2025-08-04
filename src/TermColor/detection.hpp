@@ -20,11 +20,11 @@
 
 namespace sgr {
 
-bool isStdoutBuffer(const std::streambuf *);
-bool isStdoutBuffer(const std::wstreambuf *);
+inline bool isStdoutBuffer(const std::streambuf *);
+inline bool isStdoutBuffer(const std::wstreambuf *);
 
-bool isStderrBuffer(const std::streambuf *);
-bool isStderrBuffer(const std::wstreambuf *);
+inline bool isStderrBuffer(const std::streambuf *);
+inline bool isStderrBuffer(const std::wstreambuf *);
 
 /**
  * Returns a pointer to the underlying stream buffer or wrapped stream buffer.
@@ -35,8 +35,8 @@ template <typename Stream>
       std::basic_ostream<typename std::remove_cvref_t<Stream>::char_type>>
 auto bufferOf(Stream &&stream) -> decltype(auto);
 
-bool isTerminalOutputBuffer(const std::streambuf *);
-bool isTerminalOutputBuffer(const std::wstreambuf *);
+inline bool isTerminalOutputBuffer(const std::streambuf *);
+inline bool isTerminalOutputBuffer(const std::wstreambuf *);
 
 template <typename T>
   requires std::derived_from<
@@ -46,21 +46,21 @@ bool isTerminalOutputStream(T &&stream);
 
 } // namespace sgr
 
-bool sgr::isStdoutBuffer(const std::streambuf *buf) {
+inline bool sgr::isStdoutBuffer(const std::streambuf *buf) {
   return buf == std::cout.rdbuf();
 }
-bool sgr::isStdoutBuffer(const std::wstreambuf *buf) {
+inline bool sgr::isStdoutBuffer(const std::wstreambuf *buf) {
   return buf == std::wcout.rdbuf();
 }
 
-bool sgr::isStderrBuffer(const std::streambuf *buf) {
+inline bool sgr::isStderrBuffer(const std::streambuf *buf) {
   return buf == std::cerr.rdbuf() || buf == std::clog.rdbuf();
 }
-bool sgr::isStderrBuffer(const std::wstreambuf *buf) {
+inline bool sgr::isStderrBuffer(const std::wstreambuf *buf) {
   return buf == std::wcerr.rdbuf() || buf == std::wclog.rdbuf();
 }
 
-bool sgr::isTerminalOutputBuffer(const std::streambuf *buf) {
+inline bool sgr::isTerminalOutputBuffer(const std::streambuf *buf) {
 #if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
   return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
          (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());
@@ -69,7 +69,7 @@ bool sgr::isTerminalOutputBuffer(const std::streambuf *buf) {
 #endif
 }
 
-bool sgr::isTerminalOutputBuffer(const std::wstreambuf *buf) {
+inline bool sgr::isTerminalOutputBuffer(const std::wstreambuf *buf) {
 #if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
   return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
          (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());

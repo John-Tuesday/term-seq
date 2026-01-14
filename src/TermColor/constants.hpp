@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TERMCOLOR_CONSTANTS_HPP
-#define TERMCOLOR_CONSTANTS_HPP
+#ifndef TERMSEQ_CONSTANTS_HPP
+#define TERMSEQ_CONSTANTS_HPP
 
 #include "Sgr.hpp"
 

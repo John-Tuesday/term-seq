@@ -39,7 +39,7 @@ block(SCOPE_FOR VARIABLES)
     )
     target_compile_definitions(term_seq_sgr
         INTERFACE
-            "$<$<NOT:${prop_unset}>:TERMCOLOR_ENABLE_POSIX_TERM_DETECTION=${posix_term_detect}>"
+            "$<$<NOT:${prop_unset}>:TERMSEQ_ENABLE_POSIX_TERM_DETECTION=${posix_term_detect}>"
     )
 endblock()
 
@@ -47,8 +47,8 @@ file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor"
     CONTENT [==[
 #pragma once
 
-#ifndef TERMCOLOR_TERMCOLOR_HPP
-#define TERMCOLOR_TERMCOLOR_HPP
+#ifndef TERMSEQ_TERMSEQ_HPP
+#define TERMSEQ_TERMSEQ_HPP
 
 
 $<JOIN:$<LIST:FILTER,$<LIST:TRANSFORM,$<PATH:RELATIVE_PATH,$<PATH:CMAKE_PATH,NORMALIZE,$<TARGET_PROPERTY:HEADER_SET>>,$<PATH:CMAKE_PATH,NORMALIZE,$<TARGET_PROPERTY:HEADER_DIRS>>>,REPLACE,(^.+$),#include <\1$<ANGLE-R>\n>,EXCLUDE,private/.*>,>

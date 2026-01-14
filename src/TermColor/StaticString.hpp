@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TERMCOLOR_STATIC_STRING_HPP
-#define TERMCOLOR_STATIC_STRING_HPP
+#ifndef TERMSEQ_STATIC_STRING_HPP
+#define TERMSEQ_STATIC_STRING_HPP
 
 #include <format>
 #include <string_view>

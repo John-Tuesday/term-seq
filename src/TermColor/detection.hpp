@@ -1,20 +1,20 @@
 #pragma once
 
-#ifndef TERMCOLOR_DETECTION_HPP
-#define TERMCOLOR_DETECTION_HPP
+#ifndef TERMSEQ_DETECTION_HPP
+#define TERMSEQ_DETECTION_HPP
 
 #include <iostream>
 
-#ifndef TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#ifndef TERMSEQ_ENABLE_POSIX_TERM_DETECTION
 #if defined(__linux__) || defined(__DARWIN__)
-#define TERMCOLOR_ENABLE_POSIX_TERM_DETECTION 1
+#define TERMSEQ_ENABLE_POSIX_TERM_DETECTION 1
 #else
-#define TERMCOLOR_ENABLE_POSIX_TERM_DETECTION 0
+#define TERMSEQ_ENABLE_POSIX_TERM_DETECTION 0
 #endif
 #endif
 
-#if defined(TERMCOLOR_ENABLE_POSIX_TERM_DETECTION) && \
-    TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#if defined(TERMSEQ_ENABLE_POSIX_TERM_DETECTION) && \
+    TERMSEQ_ENABLE_POSIX_TERM_DETECTION
 #include "private/detection_posix.hpp"
 #endif
 
@@ -61,7 +61,7 @@ inline bool termseq::isStderrBuffer(const std::wstreambuf* buf) {
 }
 
 inline bool termseq::isTerminalOutputBuffer(const std::streambuf* buf) {
-#if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#if TERMSEQ_ENABLE_POSIX_TERM_DETECTION
   return (isStdoutBuffer(buf) && termseq::posix::isStdoutTerminal()) ||
          (isStderrBuffer(buf) && termseq::posix::isStderrTerminal());
 #else
@@ -70,7 +70,7 @@ inline bool termseq::isTerminalOutputBuffer(const std::streambuf* buf) {
 }
 
 inline bool termseq::isTerminalOutputBuffer(const std::wstreambuf* buf) {
-#if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
+#if TERMSEQ_ENABLE_POSIX_TERM_DETECTION
   return (isStdoutBuffer(buf) && termseq::posix::isStdoutTerminal()) ||
          (isStderrBuffer(buf) && termseq::posix::isStderrTerminal());
 #else

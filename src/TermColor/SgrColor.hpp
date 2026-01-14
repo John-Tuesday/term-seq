@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TERMCOLOR_SGR_COLOR_HPP
-#define TERMCOLOR_SGR_COLOR_HPP
+#ifndef TERMSEQ_SGR_COLOR_HPP
+#define TERMSEQ_SGR_COLOR_HPP
 
 #include "Sgr.hpp"
 

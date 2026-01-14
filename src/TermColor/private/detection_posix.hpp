@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TERMCOLOR_PRIVATE_DETECTION_POSIX_HPP
-#define TERMCOLOR_PRIVATE_DETECTION_POSIX_HPP
+#ifndef TERMSEQ_PRIVATE_DETECTION_POSIX_HPP
+#define TERMSEQ_PRIVATE_DETECTION_POSIX_HPP
 
 #ifdef __has_include
 #if __has_include(<unistd.h>)

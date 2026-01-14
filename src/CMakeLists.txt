@@ -13,7 +13,7 @@ target_sources(term_seq_sgr
     PUBLIC FILE_SET amalag_header TYPE HEADERS
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/generated"
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor"
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/TermSeq"
 )
 target_compile_features(term_seq_sgr
     INTERFACE
@@ -43,7 +43,7 @@ block(SCOPE_FOR VARIABLES)
     )
 endblock()
 
-file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor"
+file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/TermSeq"
     CONTENT [==[
 #pragma once
 
@@ -57,9 +57,9 @@ $<JOIN:$<LIST:FILTER,$<LIST:TRANSFORM,$<PATH:RELATIVE_PATH,$<PATH:CMAKE_PATH,NOR
 ]==]
     TARGET term_seq_sgr
 )
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor" PROPERTIES
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/generated/TermSeq" PROPERTIES
     GENERATED ON
 )
-add_custom_target(term_seq_gen_amalgation DEPENDS generated/TermColor)
+add_custom_target(term_seq_gen_amalgation DEPENDS generated/TermSeq)
 add_dependencies(term_seq_sgr term_seq_gen_amalgation)
 

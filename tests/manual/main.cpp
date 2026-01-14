@@ -1,4 +1,4 @@
-#include <TermColor>
+#include <TermSeq>
 
 #include <print>
 

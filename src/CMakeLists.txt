@@ -3,13 +3,13 @@ add_library("TermSeq::TermSeq" ALIAS term_seq_sgr)
 target_sources(term_seq_sgr
     PUBLIC FILE_SET HEADERS
     FILES
-        TermColor/Sgr.hpp
-        TermColor/SgrColor.hpp
-        TermColor/constants.hpp
-        TermColor/ControlSequence.hpp
-        TermColor/StaticString.hpp
-        TermColor/detection.hpp
-        TermColor/private/detection_posix.hpp
+        TermSeq/Sgr.hpp
+        TermSeq/SgrColor.hpp
+        TermSeq/constants.hpp
+        TermSeq/ControlSequence.hpp
+        TermSeq/StaticString.hpp
+        TermSeq/detection.hpp
+        TermSeq/private/detection_posix.hpp
     PUBLIC FILE_SET amalag_header TYPE HEADERS
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/generated"
     FILES

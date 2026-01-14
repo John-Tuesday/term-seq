@@ -3,7 +3,7 @@
 #ifndef TERMSEQ_CONTROL_SEQUENCE_HPP
 #define TERMSEQ_CONTROL_SEQUENCE_HPP
 
-#include "TermColor/StaticString.hpp"
+#include "StaticString.hpp"
 
 namespace termseq::codes {
 

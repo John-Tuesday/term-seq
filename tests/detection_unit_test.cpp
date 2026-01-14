@@ -1,4 +1,4 @@
-#include "TermColor/detection.hpp"
+#include "TermSeq/detection.hpp"
 
 #include <fstream>
 #include <iostream>

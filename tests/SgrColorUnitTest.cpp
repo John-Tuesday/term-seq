@@ -1,5 +1,5 @@
-#include "TermColor/SgrColor.hpp"
-#include "TermColor/constants.hpp"
+#include "TermSeq/SgrColor.hpp"
+#include "TermSeq/constants.hpp"
 
 #include <iostream>
 #include <print>

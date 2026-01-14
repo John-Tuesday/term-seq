@@ -6,6 +6,8 @@ target_sources(term_color_sgr
         TermColor/Sgr.hpp
         TermColor/SgrColor.hpp
         TermColor/constants.hpp
+        TermColor/ControlSequence.hpp
+        TermColor/StaticString.hpp
         TermColor/detection.hpp
         TermColor/private/detection_posix.hpp
     PUBLIC FILE_SET amalag_header TYPE HEADERS

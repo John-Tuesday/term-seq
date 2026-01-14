@@ -1,6 +1,6 @@
-add_library(term_color_sgr INTERFACE)
-add_library("TermColor::TermColor" ALIAS term_color_sgr)
-target_sources(term_color_sgr
+add_library(term_seq_sgr INTERFACE)
+add_library("TermSeq::TermSeq" ALIAS term_seq_sgr)
+target_sources(term_seq_sgr
     PUBLIC FILE_SET HEADERS
     FILES
         TermColor/Sgr.hpp
@@ -15,18 +15,18 @@ target_sources(term_color_sgr
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor"
 )
-target_compile_features(term_color_sgr
+target_compile_features(term_seq_sgr
     INTERFACE
         cxx_std_23
 )
-set_target_properties(term_color_sgr PROPERTIES
-        TRANSITIVE_COMPILE_PROPERTIES "TermColor_enable_posix_term_detection"
-        TRANSITIVE_LINK_PROPERTIES "TermColor_enable_posix_term_detection"
+set_target_properties(term_seq_sgr PROPERTIES
+        TRANSITIVE_COMPILE_PROPERTIES "TermSeq_enable_posix_term_detection"
+        TRANSITIVE_LINK_PROPERTIES "TermSeq_enable_posix_term_detection"
 )
 
 block(SCOPE_FOR VARIABLES)
     set(posix_term_detect
-        "$<TARGET_PROPERTY:TermColor_enable_posix_term_detection>"
+        "$<TARGET_PROPERTY:TermSeq_enable_posix_term_detection>"
     )
     set(prop_unset
         "$<STREQUAL:,${posix_term_detect}>"
@@ -37,7 +37,7 @@ block(SCOPE_FOR VARIABLES)
     set(posix_term_detect
         "$<BOOL:${posix_term_detect}>"
     )
-    target_compile_definitions(term_color_sgr
+    target_compile_definitions(term_seq_sgr
         INTERFACE
             "$<$<NOT:${prop_unset}>:TERMCOLOR_ENABLE_POSIX_TERM_DETECTION=${posix_term_detect}>"
     )
@@ -55,11 +55,11 @@ $<JOIN:$<LIST:FILTER,$<LIST:TRANSFORM,$<PATH:RELATIVE_PATH,$<PATH:CMAKE_PATH,NOR
 
 #endif
 ]==]
-    TARGET term_color_sgr
+    TARGET term_seq_sgr
 )
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/generated/TermColor" PROPERTIES
     GENERATED ON
 )
-add_custom_target(term_color_gen_amalgation DEPENDS generated/TermColor)
-add_dependencies(term_color_sgr term_color_gen_amalgation)
+add_custom_target(term_seq_gen_amalgation DEPENDS generated/TermColor)
+add_dependencies(term_seq_sgr term_seq_gen_amalgation)
 

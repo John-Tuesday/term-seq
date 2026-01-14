@@ -1,5 +1,9 @@
 add_library(term_seq_sgr INTERFACE)
 add_library("TermSeq::TermSeq" ALIAS term_seq_sgr)
+target_link_libraries(term_seq_sgr
+    INTERFACE
+        TermSeq::InterfaceBase
+)
 target_sources(term_seq_sgr
     PUBLIC FILE_SET HEADERS
     FILES
@@ -14,10 +18,6 @@ target_sources(term_seq_sgr
     BASE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/generated"
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/generated/TermSeq"
-)
-target_compile_features(term_seq_sgr
-    INTERFACE
-        cxx_std_23
 )
 set_target_properties(term_seq_sgr PROPERTIES
         TRANSITIVE_COMPILE_PROPERTIES "TermSeq_enable_posix_term_detection"

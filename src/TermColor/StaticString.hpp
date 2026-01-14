@@ -6,7 +6,7 @@
 #include <format>
 #include <string_view>
 
-namespace term_color {
+namespace termseq {
 
 template <std::size_t>
 struct StaticString;
@@ -16,22 +16,22 @@ template <std::ranges::sized_range... Args>
 consteval auto joinStaticStrings(Args&&... args)
     -> StaticString<(std::ranges::size(args) + ...) - sizeof...(args) + 1>;
 
-}  // namespace term_color
+}  // namespace termseq
 
 template <std::size_t N>
-struct std::formatter<term_color::StaticString<N>, char>
+struct std::formatter<termseq::StaticString<N>, char>
     : public std::formatter<std::string_view, char> {
   using std::formatter<std::string_view, char>::parse;
 
   template <typename FormatContext>
-  FormatContext::iterator format(const term_color::StaticString<N>& s,
+  FormatContext::iterator format(const termseq::StaticString<N>& s,
                                  FormatContext& ctx) const {
     return std::formatter<std::string_view, char>::format(s, ctx);
   }
 };
 
 template <std::size_t N>
-struct term_color::StaticString {
+struct termseq::StaticString {
   constexpr StaticString() {}
 
   constexpr StaticString(const StaticString&) = default;
@@ -62,7 +62,7 @@ struct term_color::StaticString {
 
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
-consteval auto term_color::joinStaticStrings(Args&&... args)
+consteval auto termseq::joinStaticStrings(Args&&... args)
     -> StaticString<(std::ranges::size(args) + ...) - sizeof...(args) + 1> {
   std::array<char, (std::ranges::size(args) + ...) - sizeof...(args) + 1>
       data{};

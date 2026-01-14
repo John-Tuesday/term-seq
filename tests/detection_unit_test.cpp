@@ -6,13 +6,13 @@
 #include <string_view>
 #include <syncstream>
 
-namespace sgr::test {
+namespace termseq::test {
 
 template <typename StringLike>
-constexpr bool softAssert(bool value, StringLike &&message);
+constexpr bool softAssert(bool value, StringLike&& message);
 
 template <typename StringLike>
-constexpr bool softAssert(bool value, StringLike &&message) {
+constexpr bool softAssert(bool value, StringLike&& message) {
   if (!value) {
     std::println("{}", std::forward<StringLike>(message));
   }
@@ -36,41 +36,46 @@ struct TestResult {
   bool passed() const { return !failed(); }
 
   template <typename T>
-  auto checkIfStreamIsTerminalOutput(this auto &&self, T &&stream, bool expect,
+  auto checkIfStreamIsTerminalOutput(this auto&& self,
+                                     T&& stream,
+                                     bool expect,
                                      std::string_view msg = {})
       -> decltype(auto);
 
-  explicit operator bool(this auto &&self) { return self.passed(); }
+  explicit operator bool(this auto&& self) { return self.passed(); }
 
-private:
+ private:
   bool m_failed{false};
   std::string m_message{};
 };
 
-} // namespace sgr::test
+}  // namespace termseq::test
 
-int main() { return (sgr::test::runTests() ? 0 : 1); }
+int main() {
+  return (termseq::test::runTests() ? 0 : 1);
+}
 
 template <typename T>
-auto sgr::test::TestResult::checkIfStreamIsTerminalOutput(this auto &&self,
-                                                          T &&stream,
-                                                          bool expect,
-                                                          std::string_view msg)
-    -> decltype(auto) {
+auto termseq::test::TestResult::checkIfStreamIsTerminalOutput(
+    this auto&& self,
+    T&& stream,
+    bool expect,
+    std::string_view msg) -> decltype(auto) {
   if (self.failed())
     return self;
-  bool result = sgr::isTerminalOutputStream(std::forward<T>(stream));
-  bool isStd = sgr::isStdoutBuffer(sgr::bufferOf(std::forward<T>(stream))) ||
-               sgr::isStderrBuffer(sgr::bufferOf(std::forward<T>(stream)));
+  bool result = termseq::isTerminalOutputStream(std::forward<T>(stream));
+  bool isStd =
+      termseq::isStdoutBuffer(termseq::bufferOf(std::forward<T>(stream))) ||
+      termseq::isStderrBuffer(termseq::bufferOf(std::forward<T>(stream)));
   self.m_failed = result != expect;
-  self.m_message =
-      std::format("Is terminal output stream? {}: {:<15} {:>5} "
-                  "== {:<5} \nis std buffer {}",
-                  self.passed() ? "PASS" : "FAIL", msg, result, expect, isStd);
+  self.m_message = std::format(
+      "Is terminal output stream? {}: {:<15} {:>5} "
+      "== {:<5} \nis std buffer {}",
+      self.passed() ? "PASS" : "FAIL", msg, result, expect, isStd);
   return self;
 }
 
-bool sgr::test::runTests() {
+bool termseq::test::runTests() {
   bool failed{false};
   if (TestResult result = identifiesStdStreams(); !result) {
     std::println("{}", result.message());
@@ -90,7 +95,7 @@ bool sgr::test::runTests() {
   return !failed;
 }
 
-sgr::test::TestResult sgr::test::identifiesStdStreams() {
+termseq::test::TestResult termseq::test::identifiesStdStreams() {
   TestResult result =
       TestResult{}
           .checkIfStreamIsTerminalOutput(std::cout, true, "cout")
@@ -102,7 +107,7 @@ sgr::test::TestResult sgr::test::identifiesStdStreams() {
   return result;
 }
 
-sgr::test::TestResult sgr::test::nonStdStreamsAreFalse() {
+termseq::test::TestResult termseq::test::nonStdStreamsAreFalse() {
   std::ostream nullStream{nullptr};
   std::ofstream file{};
   std::osyncstream sync{file};
@@ -114,7 +119,7 @@ sgr::test::TestResult sgr::test::nonStdStreamsAreFalse() {
   return result;
 }
 
-sgr::test::TestResult sgr::test::identifiesStdStreamsInOsyncstream() {
+termseq::test::TestResult termseq::test::identifiesStdStreamsInOsyncstream() {
   TestResult result =
       TestResult{}
           .checkIfStreamIsTerminalOutput(std::osyncstream{std::cout}, true,

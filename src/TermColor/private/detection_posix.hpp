@@ -12,12 +12,16 @@
 
 #include <unistd.h>
 
-namespace sgr::posix {
+namespace termseq::posix {
 
-inline bool isStdoutTerminal() { return isatty(STDOUT_FILENO) == 1; }
+inline bool isStdoutTerminal() {
+  return isatty(STDOUT_FILENO) == 1;
+}
 
-inline bool isStderrTerminal() { return isatty(STDERR_FILENO) == 1; }
+inline bool isStderrTerminal() {
+  return isatty(STDERR_FILENO) == 1;
+}
 
-} // namespace sgr::posix
+}  // namespace termseq::posix
 
 #endif

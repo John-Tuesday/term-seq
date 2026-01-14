@@ -5,7 +5,7 @@
 
 #include "Sgr.hpp"
 
-namespace sgr {
+namespace termseq {
 
 inline constexpr auto reset = Sgr<0>{};
 inline constexpr auto bold = Sgr<1>{};
@@ -15,6 +15,6 @@ inline constexpr auto normalIntensity = Sgr<22>{};
 inline constexpr auto noItalic = Sgr<23>{};
 inline constexpr auto noUnderline = Sgr<24>{};
 
-} // namespace sgr
+}  // namespace termseq
 
 #endif

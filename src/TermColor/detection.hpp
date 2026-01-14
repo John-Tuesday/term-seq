@@ -13,18 +13,18 @@
 #endif
 #endif
 
-#if defined(TERMCOLOR_ENABLE_POSIX_TERM_DETECTION) &&                          \
+#if defined(TERMCOLOR_ENABLE_POSIX_TERM_DETECTION) && \
     TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
 #include "private/detection_posix.hpp"
 #endif
 
-namespace sgr {
+namespace termseq {
 
-inline bool isStdoutBuffer(const std::streambuf *);
-inline bool isStdoutBuffer(const std::wstreambuf *);
+inline bool isStdoutBuffer(const std::streambuf*);
+inline bool isStdoutBuffer(const std::wstreambuf*);
 
-inline bool isStderrBuffer(const std::streambuf *);
-inline bool isStderrBuffer(const std::wstreambuf *);
+inline bool isStderrBuffer(const std::streambuf*);
+inline bool isStderrBuffer(const std::wstreambuf*);
 
 /**
  * Returns a pointer to the underlying stream buffer or wrapped stream buffer.
@@ -33,46 +33,46 @@ template <typename Stream>
   requires std::derived_from<
       std::remove_cvref_t<Stream>,
       std::basic_ostream<typename std::remove_cvref_t<Stream>::char_type>>
-auto bufferOf(Stream &&stream) -> decltype(auto);
+auto bufferOf(Stream&& stream) -> decltype(auto);
 
-inline bool isTerminalOutputBuffer(const std::streambuf *);
-inline bool isTerminalOutputBuffer(const std::wstreambuf *);
+inline bool isTerminalOutputBuffer(const std::streambuf*);
+inline bool isTerminalOutputBuffer(const std::wstreambuf*);
 
 template <typename T>
   requires std::derived_from<
       std::remove_cvref_t<T>,
       std::basic_ostream<typename std::remove_cvref_t<T>::char_type>>
-bool isTerminalOutputStream(T &&stream);
+bool isTerminalOutputStream(T&& stream);
 
-} // namespace sgr
+}  // namespace termseq
 
-inline bool sgr::isStdoutBuffer(const std::streambuf *buf) {
+inline bool termseq::isStdoutBuffer(const std::streambuf* buf) {
   return buf == std::cout.rdbuf();
 }
-inline bool sgr::isStdoutBuffer(const std::wstreambuf *buf) {
+inline bool termseq::isStdoutBuffer(const std::wstreambuf* buf) {
   return buf == std::wcout.rdbuf();
 }
 
-inline bool sgr::isStderrBuffer(const std::streambuf *buf) {
+inline bool termseq::isStderrBuffer(const std::streambuf* buf) {
   return buf == std::cerr.rdbuf() || buf == std::clog.rdbuf();
 }
-inline bool sgr::isStderrBuffer(const std::wstreambuf *buf) {
+inline bool termseq::isStderrBuffer(const std::wstreambuf* buf) {
   return buf == std::wcerr.rdbuf() || buf == std::wclog.rdbuf();
 }
 
-inline bool sgr::isTerminalOutputBuffer(const std::streambuf *buf) {
+inline bool termseq::isTerminalOutputBuffer(const std::streambuf* buf) {
 #if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
-  return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
-         (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());
+  return (isStdoutBuffer(buf) && termseq::posix::isStdoutTerminal()) ||
+         (isStderrBuffer(buf) && termseq::posix::isStderrTerminal());
 #else
   return isStdoutBuffer(buf) || isStderrBuffer(buf);
 #endif
 }
 
-inline bool sgr::isTerminalOutputBuffer(const std::wstreambuf *buf) {
+inline bool termseq::isTerminalOutputBuffer(const std::wstreambuf* buf) {
 #if TERMCOLOR_ENABLE_POSIX_TERM_DETECTION
-  return (isStdoutBuffer(buf) && sgr::posix::isStdoutTerminal()) ||
-         (isStderrBuffer(buf) && sgr::posix::isStderrTerminal());
+  return (isStdoutBuffer(buf) && termseq::posix::isStdoutTerminal()) ||
+         (isStderrBuffer(buf) && termseq::posix::isStderrTerminal());
 #else
   return isStdoutBuffer(buf) || isStderrBuffer(buf);
 #endif
@@ -82,7 +82,7 @@ template <typename Stream>
   requires std::derived_from<
       std::remove_cvref_t<Stream>,
       std::basic_ostream<typename std::remove_cvref_t<Stream>::char_type>>
-auto sgr::bufferOf(Stream &&stream) -> decltype(auto) {
+auto termseq::bufferOf(Stream&& stream) -> decltype(auto) {
   using R = std::remove_cvref_t<Stream>;
   if constexpr (requires {
                   requires std::derived_from<
@@ -100,8 +100,8 @@ template <typename T>
   requires std::derived_from<
       std::remove_cvref_t<T>,
       std::basic_ostream<typename std::remove_cvref_t<T>::char_type>>
-bool sgr::isTerminalOutputStream(T &&stream) {
-  return isTerminalOutputBuffer(sgr::bufferOf(std::forward<T>(stream)));
+bool termseq::isTerminalOutputStream(T&& stream) {
+  return isTerminalOutputBuffer(termseq::bufferOf(std::forward<T>(stream)));
 }
 
 #endif

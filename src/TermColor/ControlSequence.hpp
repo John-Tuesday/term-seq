@@ -5,25 +5,25 @@
 
 #include "TermColor/StaticString.hpp"
 
-namespace sgr::codes {
+namespace termseq::codes {
 
 /**
  * Escape Sequence Introducer
  */
-inline constexpr term_color::StaticString ESC = "\x1b";
+inline constexpr termseq::StaticString ESC = "\x1b";
 
 /**
  * Control Sequence Introducer
  */
-inline constexpr term_color::StaticString CSI =
-    term_color::joinStaticStrings(ESC, "[");
+inline constexpr termseq::StaticString CSI =
+    termseq::joinStaticStrings(ESC, "[");
 
 /**
  * Operating System Command
  */
-inline constexpr term_color::StaticString OSC =
-    term_color::joinStaticStrings(ESC, "]");
+inline constexpr termseq::StaticString OSC =
+    termseq::joinStaticStrings(ESC, "]");
 
-}  // namespace sgr::codes
+}  // namespace termseq::codes
 
 #endif

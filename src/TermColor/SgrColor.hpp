@@ -8,13 +8,14 @@
 #include <cstddef>
 #include <string_view>
 
-namespace sgr {
+namespace termseq {
 
 inline namespace {
 
-template <std::size_t I> constexpr bool isValidColorIndex = I >= 0 && I <= 7;
+template <std::size_t I>
+constexpr bool isValidColorIndex = I >= 0 && I <= 7;
 
-} // namespace
+}  // namespace
 
 template <std::size_t I>
   requires isValidColorIndex<I>
@@ -36,22 +37,46 @@ struct SgrColor {
 };
 
 using Black = SgrColor<0>;
-template <> constexpr std::string_view Black::name() { return "black"; }
+template <>
+constexpr std::string_view Black::name() {
+  return "black";
+}
 using Red = SgrColor<1>;
-template <> constexpr std::string_view Red::name() { return "red"; }
+template <>
+constexpr std::string_view Red::name() {
+  return "red";
+}
 using Green = SgrColor<2>;
-template <> constexpr std::string_view Green::name() { return "green"; }
+template <>
+constexpr std::string_view Green::name() {
+  return "green";
+}
 using Yellow = SgrColor<3>;
-template <> constexpr std::string_view Yellow::name() { return "yellow"; }
+template <>
+constexpr std::string_view Yellow::name() {
+  return "yellow";
+}
 using Blue = SgrColor<4>;
-template <> constexpr std::string_view Blue::name() { return "blue"; }
+template <>
+constexpr std::string_view Blue::name() {
+  return "blue";
+}
 using Magenta = SgrColor<5>;
-template <> constexpr std::string_view Magenta::name() { return "magenta"; }
+template <>
+constexpr std::string_view Magenta::name() {
+  return "magenta";
+}
 using Cyan = SgrColor<6>;
-template <> constexpr std::string_view Cyan::name() { return "cyan"; }
+template <>
+constexpr std::string_view Cyan::name() {
+  return "cyan";
+}
 using White = SgrColor<7>;
-template <> constexpr std::string_view White::name() { return "white"; }
+template <>
+constexpr std::string_view White::name() {
+  return "white";
+}
 
-} // namespace sgr
+}  // namespace termseq
 
 #endif

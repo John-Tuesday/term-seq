@@ -12,19 +12,20 @@
 /**
  * **Select Graphic Rendition** style terminal text.
  */
-namespace sgr {
+namespace termseq {
 
 /**
  * Constructs an `SGR` character sequence with codes `Ns...` in order.
  */
-template <std::size_t... Ns> struct Sgr {
+template <std::size_t... Ns>
+struct Sgr {
   static constexpr std::string_view str() {
     return std::string_view{m_chars.begin(), m_chars.end()};
   }
 
   constexpr operator std::string_view() { return str(); }
 
-private:
+ private:
   static consteval std::size_t digitsOf(std::size_t num);
   static consteval auto toChars() -> decltype(auto);
 
@@ -34,22 +35,23 @@ private:
   static constexpr std::array m_chars{toChars()};
 };
 
-} // namespace sgr
+}  // namespace termseq
 
-template <std::size_t... Ns> struct std::formatter<sgr::Sgr<Ns...>, char> {
+template <std::size_t... Ns>
+struct std::formatter<termseq::Sgr<Ns...>, char> {
   template <typename ParseContext>
-  constexpr ParseContext::iterator parse(ParseContext &ctx) {
+  constexpr ParseContext::iterator parse(ParseContext& ctx) {
     return ctx.begin();
   }
 
   template <typename FmtContext>
-  FmtContext::iterator format(sgr::Sgr<Ns...>, FmtContext &ctx) const {
-    return std::ranges::copy(sgr::Sgr<Ns...>::str(), ctx.out()).out;
+  FmtContext::iterator format(termseq::Sgr<Ns...>, FmtContext& ctx) const {
+    return std::ranges::copy(termseq::Sgr<Ns...>::str(), ctx.out()).out;
   }
 };
 
 template <std::size_t... Ns>
-consteval std::size_t sgr::Sgr<Ns...>::digitsOf(std::size_t num) {
+consteval std::size_t termseq::Sgr<Ns...>::digitsOf(std::size_t num) {
   if (num == 0)
     return 1;
   std::size_t digits{0};
@@ -59,7 +61,7 @@ consteval std::size_t sgr::Sgr<Ns...>::digitsOf(std::size_t num) {
 }
 
 template <std::size_t... Ns>
-consteval auto sgr::Sgr<Ns...>::toChars() -> decltype(auto) {
+consteval auto termseq::Sgr<Ns...>::toChars() -> decltype(auto) {
   std::array<char, 1 + prefix.size() + suffix.size() +
                        (sep.size() * sizeof...(Ns) - 1) + (digitsOf(Ns) + ...)>
       arr{'\0'};

@@ -9,9 +9,6 @@ target_sources(term_seq_core
     BASE_DIRS
         "${term_seq_SOURCE_DIR}/src"
     FILES
-        Sgr.hpp
-        SgrColor.hpp
-        constants.hpp
         ControlSequence.hpp
         StaticString.hpp
         detection.hpp

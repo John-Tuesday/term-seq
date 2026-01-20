@@ -60,6 +60,13 @@ struct termseq::StaticString {
   char m_data[N]{};
 };
 
+template <std::size_t L, std::size_t R>
+constexpr bool operator==(const termseq::StaticString<L>& lhs,
+                          const termseq::StaticString<R>& rhs) {
+  return static_cast<std::string_view>(lhs) ==
+         static_cast<std::string_view>(rhs);
+}
+
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
 consteval auto termseq::joinStaticStrings(Args&&... args)

@@ -9,7 +9,9 @@
 namespace termseq {
 
 /**
- * Compile-time string
+ * Compile-time string.
+ *
+ * Size includes the null-terminator.
  */
 template <std::size_t>
 struct StaticString;
@@ -53,7 +55,7 @@ struct termseq::StaticString {
    * Converts into a view of the string contents.
    */
   constexpr operator std::string_view() const {
-    return std::string_view{data(), size()};
+    return std::string_view{data(), size() - 1};
   }
 
   /**
@@ -86,8 +88,30 @@ struct termseq::StaticString {
  */
 template <std::size_t L, std::size_t R>
 constexpr bool operator==(const termseq::StaticString<L>& lhs,
-                          const termseq::StaticString<R>& rhs) {
+                          const termseq::StaticString<R>& rhs) noexcept {
   return static_cast<std::string_view>(lhs) ==
+         static_cast<std::string_view>(rhs);
+}
+
+/**
+ * Compares `termseq::StaticString` by first converting to `std::string_view`,
+ * then using its implementation.
+ */
+template <std::size_t L>
+constexpr bool operator==(const termseq::StaticString<L>& lhs,
+                          std::string_view rhs) noexcept {
+  return static_cast<std::string_view>(lhs) == rhs;
+}
+
+/**
+ * Compares `termseq::StaticString` by first converting to `std::string_view`,
+ * then using its implementation.
+ */
+template <std::size_t L, std::size_t R>
+constexpr std::strong_ordering operator<=>(
+    const termseq::StaticString<L>& lhs,
+    const termseq::StaticString<R>& rhs) noexcept {
+  return static_cast<std::string_view>(lhs) <=>
          static_cast<std::string_view>(rhs);
 }
 

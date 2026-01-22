@@ -5,6 +5,9 @@
 
 #include "StaticString.hpp"
 
+#include <iostream>
+#include <print>
+
 namespace termseq::codes {
 
 /**
@@ -27,6 +30,38 @@ inline constexpr termseq::StaticString OSC =
 }  // namespace termseq::codes
 
 namespace termseq {
+
+/**
+ * Save cursor position, formatting attributes, etc..
+ */
+inline constexpr termseq::StaticString saveCursor =
+    termseq::joinStaticStrings(termseq::codes::ESC, "7");
+
+/**
+ * Restore cursor from previous `termseq::saveCursor`.
+ */
+inline constexpr termseq::StaticString restoreCursor =
+    termseq::joinStaticStrings(termseq::codes::ESC, "8");
+
+/**
+ * Erase entire line.
+ */
+inline constexpr termseq::StaticString eraseLine =
+    termseq::joinStaticStrings(termseq::codes::CSI, "2K");
+
+/**
+ * Move the cursor forward by `offset` lines.
+ */
+inline void cursorNextLine(std::ostream& out, std::size_t offset) {
+  std::print(out, "{}{}{}", termseq::codes::CSI, offset, "E");
+}
+
+/**
+ * Move the cursor `offset` previous lines.
+ */
+inline void cursorPreviousLine(std::ostream& out, std::size_t offset) {
+  std::print(out, "{}{}{}", termseq::codes::CSI, offset, "F");
+}
 
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)

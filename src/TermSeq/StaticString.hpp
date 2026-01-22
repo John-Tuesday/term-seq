@@ -143,4 +143,14 @@ struct std::formatter<termseq::StaticString<N>, char>
   }
 };
 
+/**
+ * Output `termseq::StaticString<N>` using its formatter.
+ */
+template <std::size_t N>
+std::ostream& operator<<(std::ostream& out,
+                         const termseq::StaticString<N>& str) {
+  std::format_to(std::ostreambuf_iterator{out}, "{}", str);
+  return out;
+}
+
 #endif

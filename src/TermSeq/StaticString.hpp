@@ -21,8 +21,7 @@ struct StaticString;
  */
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
-consteval auto joinStaticStrings(Args&&... args)
-    -> StaticString<(std::ranges::size(args) + ...) - sizeof...(args) + 1>;
+consteval auto joinStaticStrings(Args&&... args);
 
 }  // namespace termseq
 
@@ -115,14 +114,9 @@ constexpr std::strong_ordering operator<=>(
          static_cast<std::string_view>(rhs);
 }
 
-/**
- * Concatenates given character sequences into a singular
- * `termseq::StaticString`.
- */
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
-consteval auto termseq::joinStaticStrings(Args&&... args)
-    -> StaticString<(std::ranges::size(args) + ...) - sizeof...(args) + 1> {
+consteval auto termseq::joinStaticStrings(Args&&... args) {
   std::array<char, (std::ranges::size(args) + ...) - sizeof...(args) + 1>
       data{};
   auto it = data.begin();

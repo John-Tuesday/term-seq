@@ -10,6 +10,7 @@ target_sources(term_seq_core
         "${term_seq_SOURCE_DIR}/src"
     FILES
         ControlSequence.hpp
+        ScopedReset.hpp
         StaticString.hpp
         detection.hpp
         private/detection_posix.hpp

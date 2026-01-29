@@ -66,9 +66,9 @@ inline void cursorPreviousLine(std::ostream& out, std::size_t offset) {
 template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
 constexpr auto makeSgr(Args&&... args) {
-  // TODO: add seperator
-  return termseq::joinStaticStrings(termseq::codes::CSI,
-                                    std::forward<Args>(args)..., "m");
+  return termseq::joinStaticStrings(
+      termseq::codes::CSI,
+      termseq::joinStaticStringsWith(";", std::forward<Args>(args)...), "m");
 }
 
 inline constexpr termseq::StaticString reset = termseq::makeSgr();
@@ -80,12 +80,12 @@ inline constexpr termseq::StaticString noUnderline = termseq::makeSgr("24");
 
 template <typename T>
 constexpr auto sgr8BitForeground(T&& t) -> decltype(auto) {
-  return termseq::makeSgr("38;5;", std::forward<T>(t));
+  return termseq::makeSgr("38", "5", std::forward<T>(t));
 }
 
 template <typename T>
 constexpr auto sgr8BitBackground(T&& t) -> decltype(auto) {
-  return termseq::makeSgr("48;5;", std::forward<T>(t));
+  return termseq::makeSgr("48", "5", std::forward<T>(t));
 }
 
 template <std::size_t N>

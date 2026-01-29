@@ -23,6 +23,27 @@ template <std::ranges::sized_range... Args>
   requires(std::same_as<char, std::ranges::range_value_t<Args>> && ...)
 consteval auto joinStaticStrings(Args&&... args);
 
+/**
+ * Joins strings using `termseq::joinStaticStings` and inserts the separator
+ * between each element.
+ */
+template <std::ranges::sized_range Sep,
+          std::ranges::sized_range Base,
+          std::ranges::sized_range... Args>
+  requires std::same_as<char, std::ranges::range_value_t<Sep>> &&
+           std::same_as<char, std::ranges::range_value_t<Base>> &&
+           (std::same_as<char, std::ranges::range_value_t<Args>> && ...)
+consteval auto joinStaticStringsWith(Sep&& sep, Base&& base, Args&&... args);
+
+/**
+ * Base case of joining no strings.
+ *
+ * @return a static string representing `""`.
+ */
+template <std::ranges::sized_range Sep>
+  requires std::same_as<char, std::ranges::range_value_t<Sep>>
+consteval auto joinStaticStringsWith(Sep&& sep);
+
 }  // namespace termseq
 
 template <std::size_t N>
@@ -125,6 +146,27 @@ consteval auto termseq::joinStaticStrings(Args&&... args) {
              .out),
    ...);
   return StaticString{data};
+}
+
+template <std::ranges::sized_range Sep>
+  requires std::same_as<char, std::ranges::range_value_t<Sep>>
+consteval auto termseq::joinStaticStringsWith(Sep&& sep) {
+  return termseq::joinStaticStrings("");
+}
+
+template <std::ranges::sized_range Sep,
+          std::ranges::sized_range Base,
+          std::ranges::sized_range... Args>
+  requires std::same_as<char, std::ranges::range_value_t<Sep>> &&
+           std::same_as<char, std::ranges::range_value_t<Base>> &&
+           (std::same_as<char, std::ranges::range_value_t<Args>> && ...)
+consteval auto termseq::joinStaticStringsWith(Sep&& sep,
+                                              Base&& base,
+                                              Args&&... args) {
+  return termseq::joinStaticStrings(
+      std::forward<Base>(base),
+      termseq::joinStaticStrings(std::forward<Sep>(sep),
+                                 std::forward<Args>(args))...);
 }
 
 /**

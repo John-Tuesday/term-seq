@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TERMSEQ_SCOPEDRESET_HPP
-#define TERMSEQ_SCOPEDRESET_HPP
+#ifndef SRC_TERMSEQ_SCOPEDOUTPUT_HPP
+#define SRC_TERMSEQ_SCOPEDOUTPUT_HPP
 
 #include <TermSeq>
 

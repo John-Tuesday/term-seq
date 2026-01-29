@@ -1,4 +1,4 @@
-#include "TermSeq/ScopedReset.hpp"
+#include "TermSeq/ScopedOutput.hpp"
 
 #include <print>
 #include <syncstream>

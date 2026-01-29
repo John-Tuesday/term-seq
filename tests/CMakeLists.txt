@@ -32,3 +32,13 @@ add_custom_target(term_seq_sgr_color_unit_test_cmd
     VERBATIM
 )
 add_dependencies(term_seq_sgr_color_unit_test_cmd term_seq_sgr_color_unit_test)
+
+add_executable(term_seq_scoped_unit_test)
+target_sources(term_seq_scoped_unit_test
+  PRIVATE
+    scoped_unit_test.cpp
+)
+target_link_libraries(term_seq_scoped_unit_test
+    PRIVATE
+        TermSeq::TermSeq
+)
